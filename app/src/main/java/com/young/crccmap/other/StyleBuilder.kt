@@ -1,4 +1,7 @@
-package com.young.crccmap
+package com.young.crccmap.other
+
+import com.young.crccmap.model.LineStyle
+import com.young.crccmap.model.PointStyle
 
 class StyleBuilder {
     var id: String = ""
@@ -6,14 +9,14 @@ class StyleBuilder {
     var width: Int = 1
     var icon: String = ""
 
-    fun buildLineStyle():LineStyle{
-        val lineStyle =  LineStyle(color,width).apply { styleId = id }
+    fun buildLineStyle(): LineStyle {
+        val lineStyle = LineStyle(id, color, width)
         clear()
         return lineStyle
     }
 
-    fun buildPointStyle():PointStyle{
-        val pointStyle = PointStyle(icon).apply { styleId = id }
+    fun buildPointStyle(): PointStyle {
+        val pointStyle = PointStyle(id, icon)
         clear()
         return pointStyle
     }

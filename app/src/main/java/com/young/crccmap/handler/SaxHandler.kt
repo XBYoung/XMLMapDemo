@@ -1,10 +1,10 @@
-package com.young.crccmap
+package com.young.crccmap.handler
 
 import android.util.Log
 import org.xml.sax.Attributes
 import org.xml.sax.helpers.DefaultHandler
 
-class MyHandler : DefaultHandler() {
+class SaxHandler : DefaultHandler() {
     override fun startDocument() {
         super.startDocument()
         Log.d("SAX","startDocument")
