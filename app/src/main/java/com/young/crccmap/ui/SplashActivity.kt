@@ -88,20 +88,19 @@ class SplashActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         kotlin.runCatching {
             launch(Dispatchers.IO) {
                 kotlin.runCatching {
-                    val start = System.currentTimeMillis()
                     mapResult = XmlHandler.parseXml(
                         WeakReference(application.applicationContext),
                         "cmcc.kml"
                     )
                     mapResult?.let {
+                        it.points.forEach {
+
+                        }
                         SpHelper.instance().insert(it)
                     }
                     Log.d("mapResult", mapResult.toString())
-                    val end = System.currentTimeMillis()
-                    val duration = end - start
                     launch(Dispatchers.Main) {
-                        Toast.makeText(this@SplashActivity, duration.toString(), Toast.LENGTH_SHORT)
-                            .show()
+
                         loading.dismiss()
                     }
 

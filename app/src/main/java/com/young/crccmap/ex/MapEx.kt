@@ -6,8 +6,8 @@ import com.amap.api.maps.model.LatLng
 import com.young.crccmap.model.MapPoint
 import java.lang.ref.WeakReference
 
-fun MapPoint.toLagLng(context: WeakReference<Context>): LatLng {
-    return LatLng(this.lat.toDouble(), this.lng.toDouble()).toGDLatLng(context)
+fun MapPoint.toLagLng(): LatLng {
+    return LatLng(this.lat.toDouble(), this.lng.toDouble())
 }
 
 fun LatLng.toGDLatLng(context: WeakReference<Context>): LatLng {
@@ -18,4 +18,12 @@ fun LatLng.toGDLatLng(context: WeakReference<Context>): LatLng {
         return converter.convert()
     }
     return this
+}
+
+fun  MutableList<MapPoint>.toLatlngs():MutableList<LatLng>{
+    val latlngs = mutableListOf<LatLng>()
+    this.forEach {
+        latlngs.add(it.toLagLng())
+    }
+    return latlngs
 }

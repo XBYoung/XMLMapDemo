@@ -13,12 +13,12 @@ class StyleFactory {
        open val inner = StyleFactory()
 
     }
-    private lateinit var styles : MutableList<StyleImp>
+    private  var styles  = mutableListOf<StyleImp>()
     fun bind(binds:MutableList<StyleImp>){
         this.styles = binds
     }
 
-    fun findStyle(id:String): StyleImp?{
+    fun findStyle(id:String?): StyleImp?{
         val style = styles.find { it.getId() == id }
         Log.d("style","id = "+id+"   "+style.toString())
        return style

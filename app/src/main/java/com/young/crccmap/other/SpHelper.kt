@@ -7,7 +7,7 @@ import com.young.crccmap.model.MapResult
 import java.lang.ref.WeakReference
 
 class SpHelper {
-    private lateinit var sp:SharedPreferences
+    private  var sp:SharedPreferences? = null
     companion object{
         fun instance(): SpHelper {
             return Inner.sp
@@ -27,13 +27,17 @@ class SpHelper {
     }
 
     fun insert(mapInfo: MapResult){
-        val editor = sp.edit()
-        editor.putString("mapkey",Gson().toJson(mapInfo))
-        editor.commit()
+        sp?.let {
+            val editor = it.edit()
+            editor.putString("mapkey",Gson().toJson(mapInfo))
+            editor.commit()
+        }
     }
 
-    fun getMapInfo(): MapResult {
-        val info = sp.getString("mapkey","")
-        return Gson().fromJson(info, MapResult::class.java)
+    fun getMapInfo(): MapResult? {
+      return  sp?.let {
+            val info = it.getString("mapkey","")
+             Gson().fromJson(info, MapResult::class.java)
+        }
     }
 }

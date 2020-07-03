@@ -1,6 +1,7 @@
 package com.young.crccmap.model
 
 const val DESCRIPTION = "description"
+const val NAME = "name"
 const val POINT = "Point"
 const val LINESTRING = "LineString"
 const val LINEARRING = "LinearRing"

@@ -1,7 +1,12 @@
 package com.young.crccmap.handler
 
 import android.content.Context
+import android.graphics.Color
 import android.util.Log
+import com.amap.api.maps.model.LatLng
+import com.amap.api.maps.model.PolylineOptions
+import com.young.crccmap.ex.toGDLatLng
+import com.young.crccmap.ex.toLatlngs
 import com.young.crccmap.model.StyleImp
 import com.young.crccmap.model.*
 import com.young.crccmap.other.StyleBuilder
@@ -12,7 +17,7 @@ import java.lang.ref.WeakReference
 import javax.xml.parsers.SAXParserFactory
 
 object XmlHandler {
-    fun parseXml(context: WeakReference<Context>, assetFileName: String): MapResult? {
+    fun parseXml(contextRef: WeakReference<Context>, assetFileName: String): MapResult? {
         var mapResult: MapResult? = null
         val points = mutableListOf<MapPoint>()
         val lines = mutableListOf<MapLine>()
@@ -21,7 +26,7 @@ object XmlHandler {
             var factory: XmlPullParserFactory = XmlPullParserFactory.newInstance()
             var parser: XmlPullParser = factory.newPullParser()
 
-            context.get()?.let { context ->
+            contextRef.get()?.let { context ->
                 var input = context.assets.open(assetFileName)
                 Log.d("XmlHandler", input.available().toString())
                 parser.setInput(input, null)
@@ -30,6 +35,7 @@ object XmlHandler {
                 var point: MapPoint? = null
                 var line: MapLine? = null
                 var description = ""
+                var pointName = ""
                 var styleUrl = ""
                 val styleBuilder = StyleBuilder()
                 while (eventType != XmlPullParser.END_DOCUMENT) {
@@ -42,6 +48,18 @@ object XmlHandler {
                         XmlPullParser.START_TAG -> {
                             val name = parser.name
                             when (name) {
+                                DESCRIPTION -> {
+                                    parser.parseNoNullValue {
+                                        description = it
+                                    }
+                                }
+                                NAME -> {
+                                    parser.parseNoNullValue {
+                                        pointName = it
+                                    }
+                                }
+
+
                                 STYLE -> {
                                     parser.parseFirstAttribute {
                                         styleBuilder.id = it
@@ -79,19 +97,28 @@ object XmlHandler {
                                                     it.split(",")?.let {
                                                         if (it.size > 2) {
                                                             val point =
-                                                                MapPoint(
-                                                                    it[1],
-                                                                    it[0]
+                                                               it.cratePoint(
+                                                                    contextRef,
+                                                                    pointName,
+                                                                    description
+
                                                                 )
                                                             thisPoints.add(point)
                                                         }
                                                     }
                                                 }
+
+                                               val lineStyle  =StyleFactory.instance().findStyle(styleUrl) as? LineStyle
+                                                val color = "#${lineStyle?.color ?: "80FC0404"}"
+                                                val width = lineStyle?.width?.toFloat() ?: 1f
                                                 val mapLine =
                                                     MapLine(
                                                         thisPoints,
-                                                        StyleFactory.instance()
-                                                            .findStyle(styleUrl) as? LineStyle
+                                                        false,
+                                                        PolylineOptions()
+                                                            .addAll(thisPoints.toLatlngs())
+                                                            .color(Color.parseColor(color))
+                                                            .width(width)
                                                     )
                                                 lines.add(mapLine)
                                             }
@@ -102,13 +129,13 @@ object XmlHandler {
                                             val value = parser.nextText()
                                             val values = value.split(",")
                                             if (!values.isNullOrEmpty() && values.size >= 2) {
-                                                point =
-                                                    MapPoint(
-                                                        values[1],
-                                                        values[0],
-                                                        StyleFactory.instance()
-                                                            .findStyle(styleUrl) as? PointStyle
-                                                    )
+                                                point = values.cratePoint(
+                                                    contextRef,
+                                                    pointName,
+                                                    description,
+                                                    styleUrl
+                                                )
+
                                             }
                                         }
                                     }
@@ -163,6 +190,24 @@ object XmlHandler {
     }
 
 
+    private inline fun List<String>.cratePoint(
+        context: WeakReference<Context>,
+        pointName: String,
+        description: String,
+        styleUrl: String? =null
+    ): MapPoint {
+        val gdLatlng = LatLng(this[1].toDouble(), this[0].toDouble()).toGDLatLng(context)
+        return  MapPoint(
+            gdLatlng.latitude.toString(),
+            gdLatlng.longitude.toString(),
+            pointName,
+            description,
+            StyleFactory.instance()
+                .findStyle(styleUrl) as? PointStyle
+        )
+    }
+
+
     fun parseBySax(context: WeakReference<Context>, assetFileName: String) {
         val newInstance = SAXParserFactory.newInstance()
         val saxParser = newInstance.newSAXParser()
@@ -170,7 +215,6 @@ object XmlHandler {
             var input = context.assets.open(assetFileName)
             saxParser.parse(input, SaxHandler())
         }
-
 
     }
 

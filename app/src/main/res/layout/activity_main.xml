@@ -13,41 +13,102 @@
         android:layout_height="match_parent" />
 
     <androidx.appcompat.widget.AppCompatCheckBox
-        android:gravity="right|center"
         android:id="@+id/pointCb"
         android:layout_width="wrap_content"
         android:layout_height="64dp"
         android:layout_margin="24dp"
         android:checked="true"
+        android:gravity="right|center"
         android:text="显示点"
         android:textColor="@color/colorAccent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.AppCompatCheckBox
-        android:id="@+id/lineCb"
-        android:layout_width="wrap_content"
-        android:layout_height="64dp"
-        android:layout_margin="24dp"
-        android:checked="true"
-        android:text="显示线"
-        android:textColor="@color/colorAccent"
-        app:layout_constraintBottom_toBottomOf="@+id/pointCb"
-        app:layout_constraintStart_toEndOf="@+id/pointCb"
-        app:layout_constraintTop_toTopOf="@+id/pointCb" />
+
     <TextView
-        android:layout_marginLeft="6dp"
-        app:layout_constraintStart_toStartOf="@+id/pointCb"
-        app:layout_constraintTop_toBottomOf="@+id/pointCb"
         android:id="@+id/pointCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="6dp"
         android:text="点数:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        app:layout_constraintStart_toStartOf="@+id/pointCb"
+        app:layout_constraintTop_toBottomOf="@+id/pointCb" />
+
     <TextView
-        app:layout_constraintStart_toStartOf="@+id/pointCount"
-        app:layout_constraintTop_toBottomOf="@+id/pointCount"
         android:id="@+id/lineCount"
-        android:text="线路数:"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="线路数:"
+        app:layout_constraintStart_toStartOf="@+id/pointCount"
+        app:layout_constraintTop_toBottomOf="@+id/pointCount" />
+
+    <TextView
+        android:id="@+id/markContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/lineCount"
+        app:layout_constraintTop_toBottomOf="@+id/lineCount" />
+
+
+
+        <RadioGroup
+            android:id="@+id/mapsRoot"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:padding="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <RadioButton
+                android:checked="true"
+                android:id="@+id/normalMap"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rb_style"
+                android:button="@null"
+                android:gravity="center"
+                android:paddingLeft="16dp"
+                android:paddingTop="8dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="8dp"
+                android:text="普通地图"
+                android:textColor="@drawable/color_element"
+                android:textSize="12sp"
+                android:layout_marginRight="32dp"
+                />
+            <RadioButton
+                android:id="@+id/sateMap"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rb_style"
+                android:button="@null"
+                android:gravity="center"
+                android:paddingLeft="16dp"
+                android:paddingTop="8dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="8dp"
+                android:text="卫星地图"
+                android:layout_marginRight="32dp"
+                android:textColor="@drawable/color_element"
+                android:textSize="12sp"
+               />
+
+            <RadioButton
+                android:id="@+id/nightMap"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rb_style"
+                android:button="@null"
+                android:gravity="center"
+                android:paddingLeft="16dp"
+                android:paddingTop="8dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="8dp"
+                android:text="夜间模式"
+                android:textColor="@drawable/color_element"
+                android:textSize="12sp"
+            />
+
+
+        </RadioGroup>
 </androidx.constraintlayout.widget.ConstraintLayout>
